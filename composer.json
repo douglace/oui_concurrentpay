@@ -1,0 +1,13 @@
+{
+    "name": "cleandev/oui_concurrentpay",
+    "autoload": {
+        "psr-4": {
+            "Cleandev\\OuiConcurrentpay\\": "src/"
+        }
+    },
+    "authors": [{
+        "name": "vexi",
+        "email": "kvdouglace@gmail.com"
+    }],
+    "require": {}
+}

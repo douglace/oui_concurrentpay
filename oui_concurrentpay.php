@@ -28,9 +28,18 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+if (file_exists(_PS_MODULE_DIR_. 'oui_concurrentpay/vendor/autoload.php')) {
+    require_once _PS_MODULE_DIR_.  'oui_concurrentpay/vendor/autoload.php';
+}
+
 class Oui_concurrentpay extends Module
 {
     protected $config_form = false;
+
+    /**
+     * @param Cleandev\OuiConcurrentpay\Repository $repository
+     */
+    protected $repository;
 
     public function __construct()
     {
@@ -44,7 +53,8 @@ class Oui_concurrentpay extends Module
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
          */
         $this->bootstrap = true;
-
+        $this->repository = new Cleandev\OuiConcurrentpay\Repository($this); 
+        
         parent::__construct();
 
         $this->displayName = $this->l('Paiement concurrent');
@@ -59,18 +69,12 @@ class Oui_concurrentpay extends Module
      */
     public function install()
     {
-        Configuration::updateValue('OUI_CONCURRENTPAY_LIVE_MODE', false);
-
-        return parent::install() &&
-            $this->registerHook('header') &&
-            $this->registerHook('backOfficeHeader');
+        return parent::install() && $this->repository->install();
     }
 
     public function uninstall()
     {
-        Configuration::deleteByName('OUI_CONCURRENTPAY_LIVE_MODE');
-
-        return parent::uninstall();
+        return parent::uninstall() && $this->repository->uninstall();
     }
 
     /**
